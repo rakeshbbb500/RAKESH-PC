@@ -6,3 +6,9 @@
 .custom-wallpaper-preview.selected{outline:2px solid var(--accent,#75a7ff);outline-offset:2px}
 #apply-custom-wallpaper{margin:4px 0 10px}
 #apply-custom-wallpaper:disabled{opacity:.45;cursor:not-allowed}
+
+/* Keep the desktop canvas at true 16:9 on landscape computer displays. */
+@media (orientation:landscape) and (min-aspect-ratio:1/1){
+  body{display:grid;place-items:center;background:#050914}
+  .desktop{width:min(100vw,177.7778vh);height:min(100vh,56.25vw);min-height:0;aspect-ratio:16/9}
+}
