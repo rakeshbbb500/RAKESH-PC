@@ -1,0 +1,22 @@
+workflows:
+  rakesh-pc-android:
+    name: RAKESH PC - Android APK
+    instance_type: linux_x2
+    max_build_duration: 60
+
+    environment:
+      java: 17
+
+    scripts:
+      - name: Check Android project
+        script: |
+          test -f android-app/settings.gradle
+          test -f android-app/app/build.gradle
+          gradle --version
+
+      - name: Build release APK
+        script: |
+          gradle -p android-app --no-daemon assembleRelease
+
+    artifacts:
+      - android-app/app/build/outputs/apk/release/*.apk
