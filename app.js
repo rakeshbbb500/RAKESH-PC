@@ -13,6 +13,35 @@ const toggle = document.getElementById("toggle-password");
 const message = document.getElementById("message");
 const signInButton = document.getElementById("sign-in-button");
 
+async function loadSharedWallpaper() {
+  try {
+    const db = await new Promise((resolve, reject) => {
+      const req = indexedDB.open("rakeshpc-appearance", 1);
+      req.onupgradeneeded = () => req.result.createObjectStore("settings");
+      req.onsuccess = () => resolve(req.result);
+      req.onerror = () => reject(req.error);
+    });
+    const blob = await new Promise((resolve, reject) => {
+      const req = db.transaction("settings", "readonly").objectStore("settings").get("wallpaper");
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => reject(req.error);
+    });
+    db.close();
+    if (blob) {
+      const imageUrl = URL.createObjectURL(blob);
+      const screen = document.querySelector(".screen");
+      screen.style.backgroundImage = 'linear-gradient(rgba(5, 9, 19, .48), rgba(5, 9, 19, .62)), url("' + imageUrl + '")';
+      screen.style.backgroundSize = "cover";
+      screen.style.backgroundPosition = "center";
+      screen.style.backgroundRepeat = "no-repeat";
+    }
+  } catch (error) {
+    console.warn("Could not load saved wallpaper:", error);
+  }
+}
+loadSharedWallpaper();
+
+
 toggle.addEventListener("click", () => {
   const revealing = passwordInput.type === "password";
   passwordInput.type = revealing ? "text" : "password";
