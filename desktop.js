@@ -1,26 +1,34 @@
-const SUPABASE_URL = "https://bgakkkbavdtcndylpwgd.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_fcs7MDIxJomgpkkuHLH1eg_Zt_UcHMh";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-
-async function protectDesktop() {
-  const { data: { session }, error } = await supabaseClient.auth.getSession();
-  if (error || !session) {
-    window.location.replace("index.html");
-    return;
-  }
-  document.getElementById("user-email").textContent = session.user.email || "Signed in";
-}
-
-document.getElementById("logout-button").addEventListener("click", async () => {
-  const button = document.getElementById("logout-button");
-  button.disabled = true;
-  const { error } = await supabaseClient.auth.signOut();
-  if (error) {
-    button.disabled = false;
-    alert("Sign out failed. Please try again.");
-    return;
-  }
-  window.location.replace("index.html");
-});
-
+const SUPABASE_URL="https://bgakkkbavdtcndylpwgd.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_fcs7MDIxJomgpkkuHLH1eg_Zt_UcHMh";
+const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const $=id=>document.getElementById(id);
+const desktop=$("desktop"),layer=$("window-layer"),startMenu=$("start-menu");
+let zIndex=20,calcExpression="",uploadedNames=[];
+const apps={
+ file:{name:"File Manager",icon:"📁",render:()=>`<p class="app-intro">This PC · Your workspace</p><div class="file-toolbar"><button class="app-action" id="upload-files">＋ Add files</button><button class="app-action secondary" id="clear-files">Clear list</button><input id="file-picker" type="file" multiple hidden></div><div class="file-list"><div class="file-item"><b>🖥️</b>Desktop</div><div class="file-item"><b>📄</b>Documents</div><div class="file-item"><b>🖼️</b>Pictures</div><div class="file-item"><b>⬇️</b>Downloads</div><div class="file-item"><b>🎵</b>Music</div><div class="file-item"><b>🎬</b>Videos</div></div><h3 style="font-size:13px;margin-top:22px">Selected files</h3><div id="uploaded-list" class="empty-state">No files selected. Add files to view their names here. Files are not uploaded to a server.</div>`},
+ notes:{name:"Notes",icon:"📝",render:()=>`<p class="app-intro">Your notes are saved locally in this browser.</p><div style="display:flex;gap:8px;align-items:center;margin-bottom:9px"><button class="app-action" id="save-note">Save note</button><span id="note-status" class="status-note">Ready</span></div><textarea class="notes-area" id="notes-text" placeholder="Write your ideas, tasks and reminders here..."></textarea>`},
+ calculator:{name:"Calculator",icon:"🧮",render:()=>`<div class="calc"><input class="calc-display" id="calc-display" value="0" readonly><div class="calc-grid">${["C","⌫","%","÷","7","8","9","×","4","5","6","−","1","2","3","+","±","0",".","="].map(k=>`<button data-calc="${k}">${k}</button>`).join("")}</div></div>`},
+ settings:{name:"Settings",icon:"⚙️",render:()=>`<p class="app-intro">Personalize your RAKESH PC desktop.</p><div class="settings-row"><div><b>Appearance</b><small>Dark desktop mode</small></div><span>● ON</span></div><div class="settings-row"><div><b>Accent color</b><small>Choose your desktop highlight</small></div><input id="accent-color" type="color" value="#75a7ff" style="width:45px;height:30px;margin:0;padding:2px"></div><div class="settings-row"><div><b>Computer name</b><small>RAKESH PC</small></div><span>Desktop</span></div><div class="settings-row"><div><b>Account</b><small id="settings-email">Authenticated with Supabase</small></div><span class="online-dot"></span></div><p class="status-note">Your session is protected by Supabase Authentication. Never share your password.</p>`},
+ chrome:{name:"Chrome",icon:"🌐",render:()=>externalLauncher("Google Chrome","Search the web and open websites.","https://www.google.com","https://www.google.com")},
+ gmail:{name:"Gmail",icon:"✉️",render:()=>externalLauncher("Gmail","Open your Gmail inbox. Manage multiple Google accounts inside Gmail.","https://mail.google.com","https://mail.google.com")},
+ github:{name:"GitHub",icon:"⌘",render:()=>externalLauncher("GitHub","Your code repositories and development workflow.","https://github.com","https://github.com/rakeshbbb500/RAKESH-PC")},
+ chatgpt:{name:"ChatGPT",icon:"✳",render:()=>externalLauncher("ChatGPT","AI assistant for ideas, coding and productivity.","https://chatgpt.com","https://chatgpt.com")},
+ angel:{name:"Angel One",icon:"📈",render:()=>externalLauncher("Angel One","Open your trading and investment platform.","https://www.angelone.in","https://www.angelone.in")},
+ codemagic:{name:"Codemagic",icon:"⚡",render:()=>externalLauncher("Codemagic","Build and deliver your mobile applications.","https://codemagic.io","https://codemagic.io")}
+};
+function externalLauncher(title,desc,url,buttonUrl){return `<div style="max-width:520px;margin:30px auto;text-align:center"><div style="font-size:48px;margin-bottom:15px">${apps[Object.keys(apps).find(k=>apps[k].name===title)]?.icon||"🚀"}</div><h2 style="font-size:23px;margin:0 0 8px">${title}</h2><p class="app-intro">${desc}</p><button class="app-action" data-open-url="${buttonUrl}">Open ${title} ↗</button><p class="status-note">This opens the official website in a new browser tab. Sign-in and account management are handled by that service.</p></div>`}
+async function protectDesktop(){const {data:{session},error}=await supabaseClient.auth.getSession();if(error||!session){location.replace("index.html");return}const email=session.user.email||"Signed in";$("user-email").textContent=email;$("start-email").textContent=email;$("settings-email")?.replaceChildren(document.createTextNode(email));}
+async function logout(){const {error}=await supabaseClient.auth.signOut();if(error){alert("Sign out failed. Please try again.");return}location.replace("index.html")}
+$("logout-button").addEventListener("click",logout);$("start-logout").addEventListener("click",logout);$("start-power").addEventListener("click",logout);
+function openApp(key){const app=apps[key];if(!app)return;startMenu.classList.remove("open");startMenu.setAttribute("aria-hidden","true");const existing=document.querySelector(`[data-window="${key}"]`);if(existing){existing.classList.remove("hide");existing.style.zIndex=++zIndex;return}
+const win=document.createElement("section");win.className="app-window";win.dataset.window=key;win.style.zIndex=++zIndex;win.innerHTML=`<div class="window-titlebar"><span class="window-title">${app.icon} &nbsp;${app.name}</span><div class="window-controls"><button data-win="min" title="Minimize">—</button><button data-win="max" title="Maximize">□</button><button data-win="close" class="close" title="Close">×</button></div></div><div class="window-body">${app.render()}</div>`;layer.appendChild(win);win.addEventListener("pointerdown",()=>win.style.zIndex=++zIndex);win.querySelector('[data-win="close"]').onclick=()=>win.remove();win.querySelector('[data-win="min"]').onclick=()=>win.classList.add("hide");win.querySelector('[data-win="max"]').onclick=()=>win.classList.toggle("maximized");makeDraggable(win);wireApp(key,win);}
+function makeDraggable(win){const bar=win.querySelector(".window-titlebar");let sx=0,sy=0,ox=0,oy=0,moving=false;bar.addEventListener("pointerdown",e=>{if(e.target.closest("button")||win.classList.contains("maximized"))return;moving=true;sx=e.clientX;sy=e.clientY;const r=win.getBoundingClientRect();ox=r.left;oy=r.top;bar.setPointerCapture(e.pointerId)});bar.addEventListener("pointermove",e=>{if(!moving)return;win.style.left=(ox+e.clientX-sx+win.offsetWidth/2)+"px";win.style.top=(oy+e.clientY-sy+win.offsetHeight/2-54)+"px";win.style.transform="translate(-50%,-50%)"});bar.addEventListener("pointerup",()=>moving=false);bar.addEventListener("pointercancel",()=>moving=false)}
+function wireApp(key,win){if(key==="notes"){const area=win.querySelector("#notes-text");area.value=localStorage.getItem("rakeshpc-notes")||"";win.querySelector("#save-note").onclick=()=>{localStorage.setItem("rakeshpc-notes",area.value);win.querySelector("#note-status").textContent="Saved on this device ✓"}}
+if(key==="file"){const picker=win.querySelector("#file-picker"),list=win.querySelector("#uploaded-list");win.querySelector("#upload-files").onclick=()=>picker.click();picker.onchange=()=>{uploadedNames=[...uploadedNames,...[...picker.files].map(f=>f.name)];list.className="file-list";list.innerHTML=uploadedNames.map(n=>`<div class="file-item"><b>📄</b>${escapeHtml(n)}</div>`).join("")||"No files selected"};win.querySelector("#clear-files").onclick=()=>{uploadedNames=[];list.className="empty-state";list.textContent="No files selected."}}
+if(key==="calculator"){const display=win.querySelector("#calc-display");win.querySelectorAll("[data-calc]").forEach(btn=>btn.onclick=()=>{const v=btn.dataset.calc;if(v==="C")calcExpression="";else if(v==="⌫")calcExpression=calcExpression.slice(0,-1);else if(v==="="){try{const safe=calcExpression.replace(/×/g,"*").replace(/÷/g,"/").replace(/−/g,"-");if(!/^[0-9+*/().% -]+$/.test(safe))throw Error();calcExpression=String(Function('"use strict";return ('+safe+')')())}catch{calcExpression="Error"}}else if(v==="±"){if(calcExpression)calcExpression=calcExpression.startsWith("-")?calcExpression.slice(1):"-"+calcExpression}else calcExpression+=v;display.value=calcExpression||"0"})}
+if(key==="settings"){win.querySelector("#accent-color").oninput=e=>document.documentElement.style.setProperty("--accent",e.target.value)}}
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+document.addEventListener("click",e=>{const appButton=e.target.closest("[data-app]");if(appButton){openApp(appButton.dataset.app);return}const urlButton=e.target.closest("[data-open-url]");if(urlButton){window.open(urlButton.dataset.openUrl,"_blank","noopener,noreferrer")}});
+$("start-button").onclick=()=>{startMenu.classList.toggle("open");startMenu.setAttribute("aria-hidden",startMenu.classList.contains("open")?"false":"true")};$("task-search").onclick=()=>{$("start-menu").classList.add("open");$("start-menu").setAttribute("aria-hidden","false")};document.addEventListener("keydown",e=>{if(e.key==="Escape"){startMenu.classList.remove("open");startMenu.setAttribute("aria-hidden","true")}});
+function updateClock(){const now=new Date();$("clock-time").textContent=now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});$("clock-date").textContent=now.toLocaleDateString([],{day:"2-digit",month:"short",year:"numeric"});$("today-date").textContent=now.toLocaleDateString([],{weekday:"long",day:"numeric",month:"long",year:"numeric"})}updateClock();setInterval(updateClock,1000);
 protectDesktop();
