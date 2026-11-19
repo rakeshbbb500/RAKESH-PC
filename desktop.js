@@ -2,7 +2,7 @@ const SUPABASE_URL="https://bgakkkbavdtcndylpwgd.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_fcs7MDIxJomgpkkuHLH1eg_Zt_UcHMh";
 const supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
 const $=id=>document.getElementById(id);
-const layer=$("window-layer"),startMenu=$("start-menu");
+const layer=$("window-layer"),startMenu=$("start-menu"),desktop=$("desktop");
 let zIndex=20,calcExpression="",currentUser=null,dbPromise;
 const apps={
  file:{name:"File Manager",icon:"📁",render:()=>`<p class="app-intro">This PC · Private cloud storage for your account.</p><div class="file-toolbar"><button class="app-action" id="upload-files">＋ Add files</button><button class="app-action secondary" id="refresh-files">Refresh</button><input id="file-picker" type="file" multiple hidden></div><div id="file-list" class="file-list"><div class="empty-state">Loading local files…</div></div><p class="status-note">Files are uploaded to your private Supabase Storage account. Maximum file size: 50 MB.</p>`},
