@@ -22,13 +22,14 @@
           <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
           <button class="show-password" id="toggle-password" type="button" aria-label="Show password">Show</button>
         </div>
-        <button class="sign-in" type="submit">Sign in <span aria-hidden="true">→</span></button>
+        <button class="sign-in" id="sign-in-button" type="submit">Sign in <span aria-hidden="true">→</span></button>
         <p id="message" class="message" role="status" aria-live="polite"></p>
       </form>
-      <div class="card-footer"><span class="status-dot"></span> Your personal workspace</div>
+      <div class="card-footer"><span class="status-dot"></span> Secure personal workspace</div>
     </section>
     <footer>RAKESH PC <span>•</span> DESIGNED FOR DESKTOP</footer>
   </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
