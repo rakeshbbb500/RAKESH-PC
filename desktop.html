@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b14">
+  <title>RAKESH PC — Desktop</title>
+  <link rel="stylesheet" href="desktop.css">
+</head>
+<body>
+  <main class="desktop-shell">
+    <header class="topbar">
+      <div class="top-brand"><span class="mini-mark">R</span> RAKESH PC</div>
+      <div class="top-right"><span class="online-dot"></span><span id="user-email">Loading account...</span><button id="logout-button" type="button">Sign out ↗</button></div>
+    </header>
+    <section class="welcome">
+      <p class="overline">YOUR PERSONAL WORKSPACE</p>
+      <h1>Welcome to <span>RAKESH PC</span></h1>
+      <p class="muted">Your desktop experience starts here.</p>
+    </section>
+    <section class="app-grid" aria-label="Desktop applications">
+      <article class="app-tile"><div class="app-icon blue">▦</div><h2>My Workspace</h2><p>Workspace tools will appear here.</p><span class="coming">COMING SOON</span></article>
+      <article class="app-tile"><div class="app-icon violet">⌘</div><h2>Applications</h2><p>Your apps and shortcuts.</p><span class="coming">COMING SOON</span></article>
+      <article class="app-tile"><div class="app-icon teal">⚙</div><h2>Settings</h2><p>Personal desktop settings.</p><span class="coming">COMING SOON</span></article>
+    </section>
+    <footer class="taskbar"><span>◈ RAKESH PC</span><span>SECURE SESSION ACTIVE</span></footer>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="desktop.js"></script>
+</body>
+</html>
