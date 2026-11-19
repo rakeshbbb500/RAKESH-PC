@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080b14">
+  <title>RAKESH PC — Sign in</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="screen">
+    <section class="login-card" aria-labelledby="brand">
+      <div class="brand-mark">R</div>
+      <p class="eyebrow">PERSONAL DESKTOP EXPERIENCE</p>
+      <h1 id="brand">RAKESH <span>PC</span></h1>
+      <p class="subtitle">Welcome back. Sign in to continue.</p>
+      <form id="login-form">
+        <label for="email">Gmail address</label>
+        <input id="email" name="email" type="email" placeholder="name@gmail.com" autocomplete="username" required>
+        <label for="password">Password</label>
+        <div class="password-wrap">
+          <input id="password" name="password" type="password" placeholder="Enter your password" autocomplete="current-password" required>
+          <button class="show-password" id="toggle-password" type="button" aria-label="Show password">Show</button>
+        </div>
+        <button class="sign-in" type="submit">Sign in <span aria-hidden="true">→</span></button>
+        <p id="message" class="message" role="status" aria-live="polite"></p>
+      </form>
+      <div class="card-footer"><span class="status-dot"></span> Your personal workspace</div>
+    </section>
+    <footer>RAKESH PC <span>•</span> DESIGNED FOR DESKTOP</footer>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
