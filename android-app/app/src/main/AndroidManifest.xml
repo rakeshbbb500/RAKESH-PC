@@ -7,10 +7,6 @@
         android:usesCleartextTraffic="false"
         android:supportsRtl="true">
         <activity
-            android:name=".LinuxPcActivity"
-            android:exported="false"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="true"
