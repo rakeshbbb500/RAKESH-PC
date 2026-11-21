@@ -13,6 +13,9 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.view.Gravity;
 
 public class MainActivity extends Activity {
     private static final String HOME_URL = "https://rakeshbbb500.github.io/RAKESH-PC/";
@@ -25,6 +28,7 @@ public class MainActivity extends Activity {
         getWindow().setNavigationBarColor(Color.BLACK);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        FrameLayout container = new FrameLayout(this);
         webView = new WebView(this);
         webView.setBackgroundColor(Color.rgb(8, 11, 20));
         WebSettings settings = webView.getSettings();
@@ -74,7 +78,18 @@ public class MainActivity extends Activity {
             }
         });
 
-        setContentView(webView);
+        container.addView(webView, new FrameLayout.LayoutParams(-1, -1));
+        Button linuxButton = new Button(this);
+        linuxButton.setText("Linux PC");
+        linuxButton.setAllCaps(false);
+        FrameLayout.LayoutParams buttonParams = new FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT,
+            Gravity.BOTTOM | Gravity.END);
+        buttonParams.setMargins(0, 0, 24, 24);
+        container.addView(linuxButton, buttonParams);
+        linuxButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, LinuxPcActivity.class)));
+
+        setContentView(container);
         if (savedInstanceState == null) {
             webView.loadUrl(HOME_URL);
         } else {
@@ -102,7 +117,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        webView.saveState(outState);
+        if (webView != null) webView.saveState(outState);
         super.onSaveInstanceState(outState);
     }
 
