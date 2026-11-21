@@ -128,7 +128,7 @@ public class LinuxPcActivity extends Activity {
             14, Color.rgb(190, 200, 218)));
         String startCommands =
             "termux-x11 :1 &\n" +
-            "proot-distro login debian --shared-tmp -- /bin/bash -lc 'export DISPLAY=:1; dbus-launch --exit-with-session xfce4-session'";
+            "proot-distro login --shared-tmp debian -- /bin/bash -lc 'export DISPLAY=:1; dbus-launch --exit-with-session xfce4-session'";
         TextView startText = text(startCommands, 13, Color.rgb(160, 220, 180));
         startText.setTextIsSelectable(true);
         startText.setPadding(dp(12), dp(12), dp(12), dp(12));
